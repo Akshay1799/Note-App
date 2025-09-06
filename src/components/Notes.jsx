@@ -1,6 +1,7 @@
+//Notes
 import { FaPen, FaTrash } from "react-icons/fa";
 
-const Notes = ({ notes, onDelete }) => {
+const Notes = ({ notes, onDelete, onEdit }) => {
 
   return (
     <div className="m-6">
@@ -16,12 +17,14 @@ const Notes = ({ notes, onDelete }) => {
         {notes.map((note) => (
           <div
             key={note.id}
-            className="flex flex-col w-78 px-4 py-2 mb-4 shadow-md border rounded-2xl bg-white"
+            className="flex flex-col w-78 px-4 py-2 mb-4 shadow-md border rounded-2xl  backdrop-blur-2xl"
           >
             {/* Action buttons row */}
             <div className="flex justify-end gap-3 ml-6 mt-4">
               {/* Edit button */}
-              <div className="relative group text-sm">
+              <div className="relative group text-sm"
+              onClick={()=>onEdit(note)}
+              >
                 <FaPen className="cursor-pointer hover:text-blue-500 transition" />
                 
                 <span

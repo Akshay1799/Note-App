@@ -1,24 +1,48 @@
-import React from 'react'
+//FormInput.jsx
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 
-const FormInput = ({setNotes}) => {
+const FormInput = ({setNotes,editingNote, onUpdate}) => {
     
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
-     const handleAddNote = ()=>{
+    useEffect(() => {
+      if(editingNote){
+        setTitle(editingNote.title);
+        setDescription(editingNote.description);
+      }else {
+            setTitle('');
+            setDescription('');
+        }
+      
+    }, [editingNote])
+    
+
+     const handleAddOrUpdate = ()=>{
 
         if(!title.trim() || !description.trim()) return;
 
-        const newNote = {
-            id: Date.now(),
-            title, description, 
-            date: new Date().toISOString(),
-            time: new Date().toLocaleTimeString()
+        if (editingNote) {
+            const updateNote = {
+                ...editingNote,
+                title:title.trim(), 
+                description: description.trim(),
+                edited: new Date().toISOString()
+            };
+            onUpdate(updateNote);
+        } else {
+            const newNote = {
+                id: Date.now(),
+                title:title.trim(), 
+                description:description.trim(), 
+                date: new Date().toISOString(),
+                time: new Date().toLocaleTimeString()
         }
 
         setNotes((prevNotes)=>[...prevNotes, newNote]);
-
+        
+    }
         setTitle('');
         setDescription('');
     }
@@ -26,12 +50,12 @@ const FormInput = ({setNotes}) => {
     return (
         <div className='flex justify-center sticky flex-col items-center '>
             <h2 className='font-mono text-black  text-3xl font-bold mt-8 mask-b-from-fuchsia-500'>Got an idea? Write it down</h2>
-            <div className='relative flex justify-center items-center flex-col w-2xl py-8 mt-8 my-8 border rounded-2xl shadow-lg/20 bg-white '>
+            <div className='relative flex justify-center items-center flex-col w-2xl py-8 mt-8 my-8 border rounded-2xl shadow-lg/20 bg-blur '>
                 <div className='group relative '>
                     <button type='button' className='absolute left-66 top-[-15px] rounded-2xl px-4 mt-0 hover:cursor-pointer  hover:bg-blue-100 border font-semibold hover:duration-600 ease-out'
-                    onClick={handleAddNote}
-                    ><span className='text-2xl'>+</span></button>
-                    <span className="absolute  left-51 bottom-3 translate-x-1/2   mb-2 w-max px-2 py-1 text-sm text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition">Add a Note</span>
+                    onClick={handleAddOrUpdate}
+                    ><span className='text-2xl'>{editingNote ? "✎" : "+"}</span></button>
+                    <span className="absolute  left-51 bottom-3 translate-x-1/2   mb-2 w-max px-2 py-1 text-sm text-white bg-gray-700 rounded opacity-0 group-hover:opacity-100 transition">{editingNote ? "Update Note" : "Add a Note"}</span>
                 </div>
                 <div>
                     <input type="text" placeholder='Title' className='border mx-2 py-2 px-4 mt-6 w-106 rounded-2xl bg-white font-mono' 
