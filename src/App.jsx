@@ -2,6 +2,7 @@
 import { useState } from "react"
 import FormInput from "./components/FormInput"
 import Notes from "./components/Notes"
+import Footer from "./components/Footer";
 function App() {
 
   const [notes, setNotes] = useState([]);
@@ -20,6 +21,7 @@ function App() {
     <div>
       <FormInput setNotes={setNotes} editingNote={editingNote} onUpdate={handleUpdate}/>
       <Notes notes={notes} onDelete={handleDelete} onEdit={setEditingNote}/>
+      <Footer/>
     </div>
   )
 }

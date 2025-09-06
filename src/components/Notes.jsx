@@ -11,13 +11,13 @@ const Notes = ({ notes, onDelete, onEdit }) => {
 
       <div className="flex flex-wrap gap-4 justify-center">
         {notes.length === 0 && (
-          <p className="text-gray-500">No notes yet. Add one!</p>
+          <p className="text-gray-500 text-xl">No notes yet. Add one!</p>
         )}
 
         {notes.map((note) => (
           <div
             key={note.id}
-            className="flex flex-col w-78 px-4 py-2 mb-4 shadow-md border rounded-2xl  backdrop-blur-2xl"
+            className="flex flex-col flex-grow w-78 px-4 py-2 mb-4 shadow-md border rounded-2xl bg-[url(/src/assets/light_grey_dots_background.jpg)] bg-cover bg-center bg-no-repeat backdrop-blur-2xl"
           >
             {/* Action buttons row */}
             <div className="flex justify-end gap-3 ml-6 mt-4">
