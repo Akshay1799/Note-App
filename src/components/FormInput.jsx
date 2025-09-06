@@ -49,8 +49,8 @@ const FormInput = ({setNotes,editingNote, onUpdate}) => {
     
     return (
         <div className='flex justify-center sticky flex-col items-center '>
-            <h2 className='font-mono text-black  text-3xl font-bold mt-8 mask-b-from-fuchsia-500'>Got an idea? Write it down</h2>
-            <div className='relative flex justify-center items-center flex-col w-2xl py-8 mt-8 my-8 border rounded-2xl shadow-lg/20 bg-blur '>
+            <h2 className='font-mono text-black text-2xl  md:text-3xl font-bold mt-8   mask-b-from-fuchsia-500 text-center md:text-center  '>Got an idea? Write it down</h2>
+            <div className='relative flex justify-center items-center flex-col w-2xl  py-8 mt-8 my-8 border rounded-2xl shadow-lg/20 bg-blur  '>
                 <div className='group relative '>
                     <button type='button' className='absolute left-66 top-[-15px] rounded-2xl px-4 mt-0 hover:cursor-pointer  hover:bg-blue-100 border font-semibold hover:duration-600 ease-out'
                     onClick={handleAddOrUpdate}

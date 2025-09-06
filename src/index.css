@@ -3,13 +3,13 @@
 body {
     
     background: linear-gradient(
-        105deg,
+        135deg,
         #faf7ff 0%,
         #e4f1fb 20%,
-        #ffffff 70%,
-        #ffffff 100%
+        #d0e5fa 70%,
+        #faf7ff 90%
     );
-    /* Optional: Add animation */
+    
     background-size: 400% 400%;
     animation: gradient 15s ease ;
     z-index: -1;

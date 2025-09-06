@@ -5,7 +5,7 @@ const Notes = ({ notes, onDelete, onEdit }) => {
 
   return (
     <div className="m-6">
-      <h2 className="flex justify-center items-center text-3xl font-mono font-bold my-6">
+      <h2 className="flex justify-center items-center text-3xl font-mono font-bold my-6 mask-b-from-fuchsia-500">
         Your Notes
       </h2>
 
