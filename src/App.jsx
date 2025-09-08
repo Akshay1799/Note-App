@@ -80,7 +80,6 @@ function App() {
         </main>
       </div>
 
-      {/* ✅ Footer always at bottom */}
       <Footer />
     </div>
   );
