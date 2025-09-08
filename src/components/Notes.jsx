@@ -1,6 +1,15 @@
 import { FaPen, FaTrash } from "react-icons/fa";
 
 const Notes = ({ notes, onDelete, onEdit }) => {
+  // Category → Badge color mapping
+  const categoryColors = {
+    Work: "bg-blue-500",
+    Personal: "bg-green-500",
+    Study: "bg-purple-500",
+    Ideas: "bg-pink-500",
+    Other: "bg-gray-500",
+  };
+
   return (
     <div className="m-6">
       <h2 className="flex justify-center items-center text-3xl font-mono font-bold my-6 mask-b-from-fuchsia-500">
@@ -22,10 +31,14 @@ const Notes = ({ notes, onDelete, onEdit }) => {
             return isNaN(d) ? "—" : d.toLocaleString();
           };
 
+          // Pick color based on category, fallback to gray
+          const badgeColor =
+            categoryColors[note.category] || categoryColors["Other"];
+
           return (
             <div
               key={note.id}
-              className="flex flex-col w-78 px-4 py-2 mb-4 shadow-md border border-gray-200 rounded-2xl  oklch(96.7% 0.003 264.542)"
+              className="flex flex-col w-78 px-4 py-2 mb-4 mr-8 shadow-md border border-gray-200 rounded-2xl bg-white"
             >
               {/* Action buttons row */}
               <div className="flex justify-end gap-3 ml-6 mt-4">
@@ -66,19 +79,28 @@ const Notes = ({ notes, onDelete, onEdit }) => {
                 </div>
               </div>
 
+
               {/* Note content */}
-              <div className="mt-[-22px] pr-6">
+              <div className="mt-[-8px] pr-6">
                 <h4 className="font-mono font-extrabold text-2xl mb-2 break-words mr-8">
                   {note.title}
                 </h4>
                 <hr className="w-56" />
-                <p className="font-mono font-medium text-gray-700 pr-2 break-words line-clamp-3 mt-6">
+                <p className="font-mono font-medium text-gray-700 pr-2 break-words line-clamp-3 my-6">
                   {note.description}
                 </p>
               </div>
+              {/* Category Badge */}
+              {note.category && (
+                <span
+                  className={`self-start mt-2 px-3 py-1 text-xs font-semibold text-white rounded-full ${badgeColor}`}
+                >
+                  {note.category}
+                </span>
+              )}
 
               {/* Timestamp */}
-              <div className="mt-6 text-xs text-gray-500">
+              <div className="mt-4 text-xs text-gray-500">
                 {wasEdited ? (
                   <p>Last updated: {formatDate(updated)}</p>
                 ) : (
