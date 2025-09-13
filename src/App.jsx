@@ -45,15 +45,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Note form */}
-      <FormInput
-        setNotes={setNotes}
-        editingNote={editingNote}
-        onUpdate={handleUpdate}
-        categories={categories.filter((c) => c !== "All")}
-      />
-
-      {/* Layout */}
-      <div className="flex flex-1 gap-6 px-6">
+      <div className="flex gap-20 px-6">
         <Sidebar
           categories={categories}
           selectedCategory={selectedCategory}
@@ -62,14 +54,23 @@ function App() {
             document.getElementById("note-form")?.scrollIntoView({ behavior: "smooth" })
           }
         />
+      <FormInput
+        setNotes={setNotes}
+        editingNote={editingNote}
+        onUpdate={handleUpdate}
+        categories={categories.filter((c) => c !== "All")}
+      />
+      </div>
 
+      {/* Layout */}
+      <div className="flex flex-1 gap-6 px-6 ">
         <main className="flex-1">
           {/* Search */}
           <div className="flex justify-center my-4">
             <input
               type="search"
               placeholder="Search notes..."
-              className="w-full max-w-xl border rounded-3xl px-4 py-2"
+              className="w-full max-w-xl border rounded-3xl px-4 py-2 mb-4"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

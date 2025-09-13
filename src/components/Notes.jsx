@@ -3,22 +3,22 @@ import { FaPen, FaTrash } from "react-icons/fa";
 const Notes = ({ notes, onDelete, onEdit }) => {
   // Category → Badge color mapping
   const categoryColors = {
-    Work: "bg-blue-500",
-    Personal: "bg-green-500",
-    Study: "bg-purple-500",
-    Ideas: "bg-pink-500",
-    Other: "bg-gray-500",
+    Work: "bg-blue-400",
+    Personal: "bg-green-400",
+    Study: "bg-purple-400",
+    Ideas: "bg-pink-400",
+    Other: "bg-gray-400",
   };
 
   return (
     <div className="m-6">
-      <h2 className="flex justify-center items-center text-3xl font-mono font-bold my-6 mask-b-from-fuchsia-500">
-        Your Notes
+      <h2 className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-gradient bg-clip-text text-transparent leading-normal flex justify-center items-center text-3xl font-mono font-bold my-10">
+        Your Notes are here, see below
       </h2>
 
       <div className="flex flex-wrap gap-4 justify-center">
         {notes.length === 0 && (
-          <p className="text-gray-500 text-xl">No notes yet. Add one!</p>
+          <p className="text-gray-500 text-xl mb-8">No notes yet. Add one!</p>
         )}
 
         {notes.map((note) => {
@@ -38,7 +38,7 @@ const Notes = ({ notes, onDelete, onEdit }) => {
           return (
             <div
               key={note.id}
-              className="flex flex-col w-78 px-4 py-2 mb-4 mr-8 shadow-md border border-gray-200 rounded-2xl bg-white"
+              className="flex flex-col  w-78 px-4 py-2 mb-12 mr-8 shadow-md border border-gray-200 rounded-2xl bg-white"
             >
               {/* Action buttons row */}
               <div className="flex justify-end gap-3 ml-6 mt-4">
@@ -85,12 +85,12 @@ const Notes = ({ notes, onDelete, onEdit }) => {
                 <h4 className="font-mono font-extrabold text-2xl mb-2 break-words mr-8">
                   {note.title}
                 </h4>
-                <hr className="w-56" />
+                <hr className="max-w-4/5 text-gray-300" />
                 <p className="font-mono font-medium text-gray-700 pr-2 break-words line-clamp-3 my-6">
                   {note.description}
                 </p>
               </div>
-              {/* Category Badge */}
+              {/* Category tag */}
               {note.category && (
                 <span
                   className={`self-start mt-2 px-3 py-1 text-xs font-semibold text-white rounded-full ${badgeColor}`}

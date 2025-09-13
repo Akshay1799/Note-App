@@ -53,7 +53,7 @@ const FormInput = ({ setNotes, editingNote, onUpdate, categories }) => {
       id="note-form"
       className="flex justify-center sticky flex-col items-center m-8"
     >
-      <h2 className="font-mono text-black text-2xl md:text-3xl font-bold mt-8 mask-b-from-fuchsia-500 mx-auto">
+      <h2 className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-gradient bg-clip-text text-transparent leading-normal font-mono  text-2xl md:text-3xl font-bold mt-8 mx-auto">
         Got an idea? Write it down
       </h2>
       <div className="mx-auto relative flex justify-center items-center flex-col w-2xl py-8 mt-8 my-8 border border-gray-200 rounded-2xl shadow-lg/20 bg-blur">
@@ -61,10 +61,10 @@ const FormInput = ({ setNotes, editingNote, onUpdate, categories }) => {
         <div className="group relative">
           <button
             type="button"
-            className="absolute left-66 top-[-15px] rounded-2xl px-4 mt-0 hover:cursor-pointer hover:bg-blue-100 border border-gray-300 font-semibold hover:duration-600 ease-out"
+            className="inset-shadow-sm inset-shadow-indigo-200 absolute left-66 top-[-15px] rounded-2xl px-4 mt-0 hover:cursor-pointer hover:bg-blue-100 border border-gray-300 font-semibold hover:duration-600 ease-out"
             onClick={handleAddOrUpdate}
           >
-            <span className="text-2xl text-shadow-sm">
+            <span className="text-2xl text-shadow-md">
               {editingNote ? "✎" : "+"}
             </span>
           </button>
@@ -78,7 +78,7 @@ const FormInput = ({ setNotes, editingNote, onUpdate, categories }) => {
           <input
             type="text"
             placeholder="Title"
-            className="border border-gray-200 mx-2 py-2 px-4 mt-6 w-106 rounded-2xl bg-white font-mono"
+            className=" focus:outline-2 focus:outline-indigo-200 shadow-md  mx-2 py-2 px-4 mt-6 w-106 rounded-2xl bg-white font-mono"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             maxLength={50}
@@ -88,19 +88,21 @@ const FormInput = ({ setNotes, editingNote, onUpdate, categories }) => {
         {/* Description */}
         <textarea
           placeholder="Description..."
-          className="mt-6 px-4 pt-2 max-h-44 min-h-18 w-106 border border-gray-200 rounded-2xl bg-white text-wrap font-mono text-gray-700 resize-none"
+          className="focus:outline-2 focus:outline-indigo-200 mt-6 px-4 pt-2 shadow-md max-h-44 min-h-18 w-106 border-none rounded-2xl bg-white text-wrap font-mono text-gray-700 resize-none"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
 
         {/* Category Dropdown */}
         <select
-          className="mt-6 px-4 py-2 w-106 border border-gray-200 rounded-2xl bg-white font-mono"
+          className="focus:outline-2 focus:outline-indigo-200 mt-6 px-4  py-2 shadow-md w-106 border-none rounded-2xl bg-white font-mono"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
+            <option key={cat} value={cat}
+            className="rounded-2xl"
+            >
               {cat}
             </option>
           ))}
