@@ -49,7 +49,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header for mobile toggle */}
-      <div className="flex items-center relative my-4 px-4 py-2 md:hidden bg-gray-100 z-1  backdrop-blur-2xl">
+      <div className="flex items-center relative my-4 px-4 py-2 md:hidden z-1  backdrop-blur-2xl">
         <button
           className="p-2 fixed md:fixed text-xl mt-8 md:hover:cursor-pointer "
           onClick={() => setSidebarOpen((prev) => !prev)}
