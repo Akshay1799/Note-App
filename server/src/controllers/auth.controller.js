@@ -1,3 +1,4 @@
+// auth.controller.js
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 
@@ -79,4 +80,13 @@ export const logout = async(req, res)=>{
     }
 }
 
-export const me = async(req, res)=>{}
+export const me = async(req, res)=>{
+    try {
+        return res.status(200).json({
+            status:'success',
+            user:req.user,
+        })
+    } catch (error) {
+        console.log('Error: ',error.message);
+    }
+}
