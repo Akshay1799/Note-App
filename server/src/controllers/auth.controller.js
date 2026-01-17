@@ -1,8 +1,12 @@
 // auth.controller.js
 import User from "../models/user.model.js";
+import { config } from "../config/index.js";
+import { AppError } from "../utils/AppError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateToken } from "../utils/generateToken.js";
+import crypto from 'crypto';
 
-export const signup = async(req, res, next)=>{
+export const signup = asyncHandler(async(req, res, next)=>{
 
         const{name, email, password} = req.body;
 
@@ -20,9 +24,9 @@ export const signup = async(req, res, next)=>{
                 email:user.email,
             }
         })
-}
+})
 
-export const login = async(req, res, next)=>{   
+export const login = asyncHandler(async(req, res, next)=>{   
 
         const {email, password} = req.body;
 
@@ -52,9 +56,9 @@ export const login = async(req, res, next)=>{
             }
         })
         
-}
+})
 
-export const logout = async(req, res)=>{
+export const logout = asyncHandler(async(req, res)=>{
 
         res.clearCookie('token',{
             httpOnly:true,
@@ -64,12 +68,68 @@ export const logout = async(req, res)=>{
         })
 
         res.status(200).json({status:'success', message:' logged out succesfully!'})
-}
+})
 
-export const me = async(req, res)=>{
+export const forgotPassword = asyncHandler(async(req, res, next)=>{
+    const {email} = req.body;
+    if(!email) return next(new AppError("Email is required", 400));
+
+    const user = await User.findOne({email});
+    if(!user) return res.status(200).json({
+        status:'success',
+        message: "If that email exists, we sent a reset link."
+    })
+
+    const resetToken =  user.createPasswordResetToken()
+
+    await user.save({validateBeforeSave:false});
+
+    const resetUrl = `${config.resetPasswordUrl}/${resetToken}`;
+
+    console.log('RESET URL: ', resetUrl);
+
+    return res.status(200).json({
+        status:'success', 
+        message:'If that email exists, we sent a reset link'
+    })
+    
+})
+
+export const resetPassword = asyncHandler(async(req, res, next)=>{
+    const {password} = req.body;
+    const {token} = req.params;
+
+
+    if(!token) return next(new AppError('Token is required', 400));
+    if(!password) return next(new AppError('Password is required', 400));
+    if(password.length < 6) return next(new AppError('Password must be minimum of 6 characters', 400));
+
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: {$gt: Date.now()}
+    })
+
+    if(!user) return next(new AppError('Token is invalid or expired', 400));
+
+    user.password = password;
+
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+
+    await user.save();
+
+    return res.status(200).json({
+        status:'success',
+        message: 'Password reset succesfully. Please login again!'
+    })
+})
+
+export const me = asyncHandler(async(req, res)=>{
 
         return res.status(200).json({
             status:'success',
             user:req.user,
         })
-}
+})

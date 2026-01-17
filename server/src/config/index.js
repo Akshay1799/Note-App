@@ -7,5 +7,6 @@ export const config = {
     jwtSecret: process.env.JWT_SECRET,
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1d',
     mongoUri: process.env.MONGO_URI,
-    clientUrl: process.env.CLIENT_URL
+    clientUrl: process.env.CLIENT_URL,
+    resetPasswordUrl: process.env.RESET_PASSWORD_URL
 }
