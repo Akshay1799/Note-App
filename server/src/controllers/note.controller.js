@@ -1,13 +1,16 @@
 // notes.controller.js
-
+import mongoose from "mongoose";
 import Note from "../models/notes.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { AppError } from "../utils/AppError.js";
 
-export const createNote = async (req, res) => {
-  try {
+
+export const createNote = asyncHandler(async (req, res) => {
+  
     const { title, content } = req.body;
 
     if (!title)
-      return res.status(400).json({ error: "title is required" });
+      return next(new AppError("Title is required"))
 
     const note = await Note.create({
       title,
@@ -16,50 +19,74 @@ export const createNote = async (req, res) => {
     });
 
     return res.status(201).json({ status: "success", note });
-  } catch (error) {
-    console.log(`Something went wrong: ${error.message}`);
-  }
-};
+  
+});
 
-export const getMyNotes = async (req, res) => {
-  try {
-    const notes = await Note.find({ owner: req.user._id }).sort({
-      createdAt: -1,
-    });
+export const getMyNotes = asyncHandler(async (req, res, next) => {
+  
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const q = req.query.q || '';
+    const sortBy = req.query.sortBy || 'createdAt';
+    const order = req.query.order === 'asc'? 1 : -1
 
-    // if (!notes) return res.status(404).json({ message: "Notes are empty!" });
+    const skip = (page - 1) * limit;
 
-    return res.status(200).json({ status: "Success", notes });
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+    const filter = {owner: req.user._id};
 
-export const getNoteById = async (req, res) => {
-  try {
-    const note = await Note.findById(req.params.id);
-    if(!note)return res.status(404).json({error:'Note not found'})
-    
-    if(note.owner.toString() !== req.user._id.toString()){
-        return res.status(403).json({error:'Forbidden'})
+    if(q){
+      filter.$or = [
+        {title: {$regex:q, $options:'i'}},
+        {content: {$regex:q, $options:'i'}}
+      ]
     }
 
+    const sort = {[sortBy]:order}
+
+    const notes = await Note.find(filter).sort(sort).skip(skip).limit(limit);
+    
+    const total = await Note.countDocuments(filter);
+    const totalPages = Math.ceil(total/limit);
+
+
+    return res.status(200).json({ 
+      status: "Success", 
+      results: notes.length,
+      page, 
+      limit,
+      total,
+      totalPages,
+      notes
+     });
+  
+});
+
+export const getNoteById = asyncHandler(async (req, res, next) => {
+ 
+    const {id} = req.params;
+
+    if(!mongoose.Types.ObjectId.isValid(id)){
+      return next(new AppError('Invalid ID', 400))
+    }
+
+    const note = await Note.findOne({_id:id, owner:req.user._id});
+    if(!note)return next(new AppError('Note not found', 404))
+    
     return res.status(200).json({status:'Success', note});
 
-  } catch (error) {
-    return res.status(500).json({ error: "Server error" });
-    
-  }
-};
+  
+});
 
-export const updateNote = async (req, res) => {
-  try {
-        const note = await Note.findById(req.params.id);
-        if(!note)return res.status(404).json({error:'Note not found'});
+export const updateNote = asyncHandler(async (req, res, next) => {
 
-        if(note.owner.toString() !== req.user._id.toString()){
-            return res.status(403).json({error:'Forbidden'})
+        const {id} = req.params;
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+          return next(new AppError('Invalid ID', 400))
         }
+
+        const note = await Note.findOne({_id:id, owner:req.user._id});
+        if(!note)return next(new AppError('Note not found', 404));
 
         note.title = req.body.title ?? note.title;
         note.content = req.body.content ?? note.content;
@@ -67,24 +94,22 @@ export const updateNote = async (req, res) => {
         await note.save();
 
         return res.status(200).json({status:'Note updated succesfully', note})
-  } catch (error) {
-    return res.status(500).json({ error: "Server error" });
-  }
-};
+  
+});
 
-export const deleteNote = async (req, res) => {
-  try {
-        const note = await Note.findById(req.params.id);
-        if(!note) return res.status(404).json({error:'Note not found'});
+export const deleteNote = asyncHandler(async (req, res, next) => {
 
-        if(note.owner.toString() !== req.user._id.toString()){
-            return res.status(403).json({error:'Forbidden'})
+        const {id} = req.params;
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+          return next(new AppError('Invalid ID', 400))
         }
+
+        const note = await Note.findOne({_id:id, owner:req.user._id});
+        if(!note) return next(new AppError('Note not found', 404))
 
         await note.deleteOne();
 
         return res.status(200).json({status:'Note deleted succesfully'})
-  } catch (error) {
-    return res.status(500).json({ error: "Server error" });
-  }
-};
+  
+});

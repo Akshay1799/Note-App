@@ -3,26 +3,25 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { config } from "../config/index.js";
+import { AppError } from "../utils/AppError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const protect = async (req, res, next) => {
-  try {
+export const protect = asyncHandler(async (req, res, next) => {
+
     let token = req.cookies?.token;
 
     if (!token) {
-      return res.status(401).json({ error: "Not authorized, token missing" });
+      return next(new AppError("Not authorized, token missing", 400));
     }
 
     const decoded = jwt.verify(token, config.jwtSecret);
 
     const user = await User.findById(decoded.id).select("-password");
     if (!user)
-      return res.status(401).json({ error: "Not authorized, user not found" });
+      return next(new AppError("user not found", 404))
 
     req.user = user;
 
     next();
     
-  } catch (error) {
-    return res.status(401).json({ error: "Not authorized, token invalid" });
-  }
-};
+});

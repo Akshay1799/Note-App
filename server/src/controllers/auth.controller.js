@@ -2,14 +2,14 @@
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/generateToken.js";
 
-export const signup = async(req, res)=>{
-    try {
+export const signup = async(req, res, next)=>{
+
         const{name, email, password} = req.body;
 
-        if(!name || !email || !password) return res.status(400).json({error:'All fields are required!'});
+        if(!name || !email || !password) return next(new AppError("All fields required", 400))
 
         const existingUser = await User.findOne({email});
-        if(existingUser) return res.status(401).json({error:'Email alreadye exist'});
+        if(existingUser) return next(new AppError("User already exists", 409))
 
         const user = await User.create({name, email, password});
 
@@ -20,25 +20,19 @@ export const signup = async(req, res)=>{
                 email:user.email,
             }
         })
-
-    } catch (error) {
-        console.log(`Something went wrong: ${error.message}`);
-        
-    }
 }
 
-export const login = async(req, res)=>{
-    try {   
+export const login = async(req, res, next)=>{   
 
         const {email, password} = req.body;
 
-        if(!email || !password) return res.status(400).json({error:'fields are missing'});
+        if(!email || !password) return next(new AppError("Not authorized, token missing", 401))
 
         const user = await User.findOne({email});
-        if(!user)return res.status(401).json({error:'Invalid credentials'})
+        if(!user)return next(new AppError("Invalid credentials", 401))
         
         const isMatch = await user.comparePassword(password);
-        if(!isMatch)return res.status(401).json({error: 'Invalid credentials'});
+        if(!isMatch)return next(new AppError("Invalid credentials", 401))
 
         const token = generateToken(user._id);
 
@@ -58,14 +52,10 @@ export const login = async(req, res)=>{
             }
         })
         
-    } catch (error) {
-        console.log(`Error while logging in: ${error.message}`);
-        
-    }
 }
 
 export const logout = async(req, res)=>{
-    try {
+
         res.clearCookie('token',{
             httpOnly:true,
             secure:false,
@@ -74,19 +64,12 @@ export const logout = async(req, res)=>{
         })
 
         res.status(200).json({status:'success', message:' logged out succesfully!'})
-    } catch (error) {
-        console.log(`Something went wrong: ${error.message}`);
-        
-    }
 }
 
 export const me = async(req, res)=>{
-    try {
+
         return res.status(200).json({
             status:'success',
             user:req.user,
         })
-    } catch (error) {
-        console.log('Error: ',error.message);
-    }
 }
