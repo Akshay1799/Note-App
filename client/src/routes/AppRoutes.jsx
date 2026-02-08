@@ -6,7 +6,6 @@ import Signup from '../pages/Signup'
 import ResetPassword from '../pages/ResetPassword'
 import ForgetPassword from '../pages/ForgetPassword'
 import Notes from '../pages/Notes'
-import Navbar from '../components/Navbar'
 import MainLayout from '../components/Layout/MainLayout'
 
 

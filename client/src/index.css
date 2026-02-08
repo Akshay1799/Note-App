@@ -1,1 +1,25 @@
 @import 'tailwindcss';
+
+input, textarea, select {
+  background-color: transparent !important;
+  background-image: none !important;
+  color: inherit !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: inherit !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+input:-moz-autofill {
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -moz-text-fill-color: inherit !important;
+}
+::placeholder {
+  color: rgba(0, 0, 0, 0.7) !important;
+}
