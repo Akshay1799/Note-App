@@ -23,3 +23,7 @@ input:-moz-autofill {
 ::placeholder {
   color: rgba(0, 0, 0, 0.7) !important;
 }
+
+body{
+  background-color: rgb(251, 249, 249);
+}

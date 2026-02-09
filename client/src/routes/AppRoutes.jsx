@@ -7,6 +7,7 @@ import ResetPassword from '../pages/ResetPassword'
 import ForgetPassword from '../pages/ForgetPassword'
 import Notes from '../pages/Notes'
 import MainLayout from '../components/Layout/MainLayout'
+import ProtectedRoute from './ProtectedRoute'
 
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
             {
+                path: '/',
+                element: <Signup />
+            },
+            {
                 path: '/login',
                 element: <Login />
             },
@@ -22,12 +27,16 @@ const router = createBrowserRouter([
                 path: '/signup',
                 element: <Signup />
             },
+            
             {
-                path: '/notes',
-                element: <Notes />
+                element: <ProtectedRoute/>,
+                children:[
+                    {path: "notes", element: <Notes/>}
+                ]
             },
         ]
     },
+
 
     {
         path: '/resetPassword/:token',
@@ -42,9 +51,7 @@ const router = createBrowserRouter([
 
 function AppRoute() {
     return (
-        <div>
-            <RouterProvider router={router} />
-        </div>
+        <RouterProvider router={router} /> 
     )
 }
 
