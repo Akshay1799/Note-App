@@ -57,7 +57,7 @@ const Notes = () => {
   }
 
   return (
-    <div className='max-w-xl mx-auto mt-6 bg-gray-100 flex flex-col justify-center items-center'>
+    <div className='max-w-xl mx-auto mt-6 flex flex-col justify-center items-center'>
 
       <h2 className='text-2xl font-bold mb-8'>My Notes</h2>
       {error && <p className='text-red-500 mb-3'>{error}</p>}
@@ -72,7 +72,7 @@ const Notes = () => {
             placeholder="Content..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className=" px-3 py-2  outline-none min-h-20"
+            className=" px-3 py-2 outline-none min-h-20 max-h-100"
             rows="3"
           />
         </div>
