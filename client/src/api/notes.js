@@ -1,8 +1,8 @@
 // api/notes.js
 import { api } from "./axios";
 
-export const getNotes = async(params={})=>{
-    const response = await api.get('/api/notes', {params})
+export const getNotes = async(params={}, signal)=>{
+    const response = await api.get('/api/notes', {params, signal})
     return response.data;
 }
 

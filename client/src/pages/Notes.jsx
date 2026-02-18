@@ -1,6 +1,6 @@
 // pages/Notes.jsx
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getNotes, createNote, deleteNote } from '../api/notes'
 import { MdDeleteOutline } from "react-icons/md";
 import { PiNotePencilBold } from "react-icons/pi";
@@ -10,22 +10,64 @@ const Notes = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("")
-  const [isFormOpen, setIsFormOpen] = useState(false)
+  const [error, setError] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(6);
+  const [search, setSearch] = useState("");
+  const [totalPages, setTotalPages] = useState(1);
+  const [debounceSearch, setDebounceSearch] = useState(search);
 
 
   useEffect(() => {
     fetchNotes();
-  }, [])
+  }, [page, debounceSearch])
 
+  useEffect(() => {
+        
+      
+        return () => {
+          if(abortControllerRef.current){
+            abortControllerRef.current.abort();
+          }
+        }
+      }, [])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounceSearch(search)
+    }, 400);
+  
+    return ()=>clearTimeout(timer)
+    
+  }, [search])
+  
+ const abortControllerRef = useRef(null);
 
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const data = await getNotes();
-      setNotes(data.notes || [])
+      
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      const data = await getNotes({
+        page,
+        limit,
+        q: debounceSearch,
+      },
+      controller.signal
+    );
+      setNotes(data.notes || []);
+      setTotalPages(data.totalPages || 1);
     } catch (error) {
-      setError("Failed to load notes");
+      if(error.name !== "CanceledError" && error.name !== "AbortError"){
+        setError("Failed to load notes");
+      }
     } finally {
       setLoading(false)
     }
@@ -48,10 +90,15 @@ const Notes = () => {
   }
 
   const handleDeleteNote = async (id) => {
+    const previousNotes = notes;
+
+    setNotes(prev => prev.filter(note => note._id !== id));
+
     try {
       await deleteNote(id);
-      setNotes((prev) => prev.filter((note) => note._id !== id));
+      fetchNotes();
     } catch (error) {
+      setNotes(previousNotes)
       setError('Failed to delete note')
     }
   }
@@ -60,21 +107,23 @@ const Notes = () => {
     return <p className='text-center mt-8'>Loading notes...</p>
   }
 
-  return (
-    <div className=' max-w-4xl mx-auto mt-6 flex flex-col justify-center items-center px-4'>
 
-      <h2 className='text-2xl font-bold my-6'>My Notes</h2>
+
+
+  return (
+    <div className=' border-gray-100 border-l border-r max-w-215 mx-auto mt-6 flex flex-col justify-center items-center px-4'>
+
       {error && <p className='text-red-500 mb-3'>{error}</p>}
 
       {!isFormOpen && (
         <div title='Create new' className='w-full flex justify-start my-6 '>
-          <PiNotePencilBold onClick={()=>setIsFormOpen(true)} className=' text-4xl hover:cursor-pointer hover:text-blue-400 hover:duration-150'/>
+          <PiNotePencilBold onClick={() => setIsFormOpen(true)} className=' text-4xl hover:cursor-pointer hover:text-blue-400 hover:duration-150' />
         </div>
 
       )}
 
       {isFormOpen && (
-        <form onSubmit={handleCreateNote} className='flex justify-between gap-2 mb-4 '>    
+        <form onSubmit={handleCreateNote} className='flex justify-between gap-2 mb-8 '>
           <div className='flex flex-col gap-2'>
             <input value={title} onChange={(e) => setTitle(e.target.value)}
               type="text" placeholder='Title'
@@ -95,25 +144,54 @@ const Notes = () => {
         </form>
 
       )}
-      
+
 
       {notes.length === 0 && (
         <p className='text-gray-500 text-xl font-semibold'>No notes yet. Create one!</p>
       )}
 
-      <ul className='space-y-2 flex gap-3 flex-wrap mt-6'>
+      <div className='w-full flex justify-between items-center mt-4 '>
+        <h2 className='text-2xl font-bold mt-6 -mb-1 w-full ml-1'>My Notes</h2>
+        <div className='flex items-center mt-6 mr-10'>
+          <input type="text" value={search} placeholder='Search notes...'
+            onChange={(e) => {
+              setPage(1);
+              setSearch(e.target.value)
+            }}
+            className="px-3 py-1 outline-none rounded-2xl border border-blue-200 text-gray-700 w-54 max-w-full"
+          />
+        </div>
+      </div>
+      <ul className='space-y-2 flex gap-3 flex-wrap mt-8'>
         {notes.map((note) => (
-          <li key={note._id} className='relative flex justify-between  bg-amber-50 p-3 border border-amber-200 hover:border-blue-200 rounded-2xl hover:shadow-lg w-64 h-40 overflow-hidden'>
+          <li key={note._id} className='relative flex justify-between  bg-amber-50 p-3 border border-amber-200 hover:border-blue-200 rounded-2xl hover:shadow-md w-64 h-40 transition-all duration-200 hover:scale-[0.98]'>
             <div className='flex flex-col -top-2 mx-2 gap-y-2 '>
               <span className='font-semibold text-xl tracking-wider'>{note.title}</span>
               <span className='text-gray-800 tracking-wider mr-1'>{note.content}</span>
             </div>
             <div className='w-fit'>
-              <button onClick={() => handleDeleteNote(note._id)} title='Delete' className='absolute -right-2 top-0 px-4 py-2 text-black hover:text-red-500 hover:duration-150 text-2xl hover:cursor-pointer font-semibold ml-4'><MdDeleteOutline/></button>
+              <button onClick={() => handleDeleteNote(note._id)} title='Delete' className='absolute -right-2 top-0 px-4 py-2 text-black hover:text-red-500 hover:duration-150 text-2xl hover:cursor-pointer font-semibold ml-4'><MdDeleteOutline /></button>
             </div>
           </li>
         ))}
       </ul>
+
+      <div className='flex gap-4 mt-6 items-center'>
+        <button disabled={page === 1} onClick={()=>setPage((p)=>p-1)}
+          className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer bg-white border border-blue-300'  
+        >
+          Pre
+        </button>
+
+        <span>Page {page} of {totalPages}</span>
+
+        <button disabled={page === totalPages} onClick={()=>setPage((p)=>p+1)}
+          className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer bg-white border border-blue-300'
+        >
+          Next
+        </button>
+
+      </div>
     </div>
   )
 }
