@@ -11,6 +11,11 @@ export const createNote = async(noteData)=>{
     return response.data;
 }
 
+export const updateNote = async(id, noteData)=>{
+    const response = await api.patch(`/api/notes/${id}`, noteData);
+    return response.data;
+}
+
 export const deleteNote = async(noteId)=>{
     const response = await api.delete(`/api/notes/${noteId}`);
     return response.data;
