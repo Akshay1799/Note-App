@@ -108,7 +108,7 @@ const Notes = () => {
 
     try {
       await deleteNote(id);
-      // fetchNotes();
+      fetchNotes();
     } catch (error) {
       setNotes(previousNotes)
       setError('Failed to delete note')
@@ -160,11 +160,11 @@ const Notes = () => {
       {error && <p className='text-red-500 mb-3'>{error}</p>}
 
       {isFormOpen ? (
-        <div title='Close' className='w-full flex justify-start mt-6 '>
+        <div title='Close' className='w-full flex justify-start mt-6 ml-33'>
           <MdOutlineCancel onClick={() => setIsFormOpen(false)} className=' text-4xl hover:cursor-pointer hover:duration-150 hover:text-gray-500' />
         </div>
       ) : (
-        <div title='Create new' className='w-full flex justify-start mt-6 '>
+        <div title='Create new' className='w-full flex justify-start mt-6 ml-33'>
           <PiNotePencilBold onClick={() => setIsFormOpen(true)} className=' text-4xl hover:cursor-pointer hover:text-blue-400 hover:duration-150' />
         </div>
       )}
@@ -196,9 +196,9 @@ const Notes = () => {
         <p className='text-gray-500 text-xl font-semibold'>No notes yet. Create one!</p>
       )}
 
-      <div className='w-full flex justify-between items-center mt-4 '>
-        <h2 className='text-2xl font-bold mt-6 -mb-1 w-full ml-1'>My Notes</h2>
-        <div className='flex items-center mt-6 mr-39'>
+      <div className='w-full flex justify-between items-center mt-4 ml-33'>
+          <h2 className='text-3xl font-bold mt-6 -mb-1 w-full'>My Notes</h2>
+        <div className='flex items-center mt-6 mr-33'>
           <input type="text" value={search} placeholder='Search notes...'
             onChange={(e) => {
               setPage(1);
@@ -208,7 +208,7 @@ const Notes = () => {
           />
         </div>
       </div>
-      <ul className='space-y-2 flex gap-3 flex-wrap mt-8'>
+      <ul className='space-y-2 flex gap-6 flex-wrap mt-8 justify-center'>
         {notes.map((note) => (
           <li key={note._id} className=' overflow-hidden relative flex justify-between  bg-amber-50 p-3 border border-amber-200 hover:border-blue-200 rounded-2xl hover:shadow-md w-74 h-50 transition-all duration-200 hover:scale-[0.98]'>
             
