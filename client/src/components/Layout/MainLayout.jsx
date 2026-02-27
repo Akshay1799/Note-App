@@ -5,10 +5,10 @@ import Navbar from '../Navbar'
 const MainLayout = () => {
   return (
     <>
-    <main>
-        <Navbar/>
+      <Navbar/>
+      <main className='px-4'>
         <Outlet/>
-    </main>
+      </main>
     </>
   )
 }

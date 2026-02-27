@@ -7,13 +7,14 @@ import ResetPassword from '../pages/ResetPassword'
 import ForgetPassword from '../pages/ForgetPassword'
 import Notes from '../pages/Notes'
 import MainLayout from '../components/Layout/MainLayout'
+import AuthLayout from '../components/Layout/AuthLayout'
 import ProtectedRoute from './ProtectedRoute'
 
 
 const router = createBrowserRouter([
     {
-        path:'/',
-        element: <MainLayout />,
+        
+        element: <AuthLayout />,
         children: [
             {
                 path: '/',
@@ -27,25 +28,29 @@ const router = createBrowserRouter([
                 path: '/signup',
                 element: <Signup />
             },
-            
             {
-                element: <ProtectedRoute/>,
-                children:[
-                    {path: "notes", element: <Notes/>}
-                ]
+                path: '/forgetPassword',
+                element: <ForgetPassword />
             },
         ]
     },
-
+    
+    {
+        element: (
+            <ProtectedRoute>
+                <MainLayout/>
+            </ProtectedRoute>
+        ),
+        children:[
+            {path: "/notes", element: <Notes/>}
+        ]
+    },
 
     {
         path: '/resetPassword/:token',
         element: <ResetPassword />
     },
-    {
-        path: '/forgetPassword',
-        element: <ForgetPassword />
-    },
+    
 
 ])
 

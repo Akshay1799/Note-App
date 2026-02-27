@@ -1,51 +1,27 @@
-// Navbar.jsx
-
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
-
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-
-  const { user, loading, logout } = useAuth();
-
+  const { logout } = useAuth();
   const navigate = useNavigate();
-  if (loading) return null;
 
   const handleLogout = async () => {
     await logout();
     navigate("/login");
-  }
+  };
 
   return (
-    <nav className='bg-gray-200 flex items-center justify-center w-xl mx-auto 0 py-2 rounded-2xl mt-2'>
-      <ul className='flex gap-6'>
-        {!user ? (
-          <>
-            <li>
-              <Link to={'/login'}>Login</Link>
-            </li>
-            <li>
-              <Link to={'/signup'}>Signup</Link>
-            </li>
-            <li>
-              <Link to={'/forgetPassword'}>ForgetPassword</Link>
-              </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <Link to={'/notes'}>Notes</Link>
-            </li>
+    <nav className="flex justify-between items-center px-6 py-3 border-b bg-white">
+      <h1 className="text-xl font-bold">📝 NotesApp</h1>
 
-            <li>
-              <button onClick={handleLogout} className='hover:cursor-pointer'>Logout</button>
-            </li>
-
-          </>
-        )}
-      </ul>
+      <button
+        onClick={handleLogout}
+        className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        Logout
+      </button>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
