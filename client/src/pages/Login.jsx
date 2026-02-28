@@ -109,7 +109,7 @@ const Login = () => {
             Forgot password?
           </Link>
         </div>
-        <button disabled={!isFormValid || isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:bg-blue-500 hover:scale-95 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs '>
+        <button disabled={!isFormValid || isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:bg-blue-500 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs '>
           <span className='text-shadow-2xs font-bold text-white'>{isLoading ? "Logging in..." : "Login"}</span>
         </button>
         <div className="text-center mt-4 space-y-2">

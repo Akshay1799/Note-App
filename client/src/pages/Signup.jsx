@@ -144,7 +144,7 @@ const Signup = () => {
             <p className='w-full ml-26 text-red-500 text-sm mt-1'>{errors.confirmPassword}</p>
           )}
         </div>
-        <button disabled={!isFormValid || isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs shadow-gray-500 '>
+        <button disabled={!isFormValid || isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:bg-blue-500 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs shadow-gray-500 '>
           <span className='text-shadow-2xs font-bold text-white'>{isLoading ? "Signing up..." : "Sign up"}</span>
         </button>
         <div className="text-center mt-4">

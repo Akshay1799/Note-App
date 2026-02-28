@@ -191,24 +191,27 @@ const Notes = () => {
 
       )}
 
+      {notes.length > 0 && (
+        <div className='w-full flex justify-between items-center mt-4 ml-33'>
+            <h2 className='text-3xl font-bold mt-6 -mb-1 w-full'>My Notes</h2>
+          <div className='flex items-center mt-6 mr-33'>
+            <input type="text" value={search} placeholder='Search notes...'
+              onChange={(e) => {
+                setPage(1);
+                setSearch(e.target.value)
+              }}
+              className="shadow-md px-3 py-1 outline-none rounded-2xl border border-blue-200 text-gray-600 text-md w-64 max-w-full"
+            />
+          </div>
+        </div>
 
-      {notes.length === 0 && (
-        <p className='text-gray-500 text-xl font-semibold'>No notes yet. Create one!</p>
       )}
 
-      <div className='w-full flex justify-between items-center mt-4 ml-33'>
-          <h2 className='text-3xl font-bold mt-6 -mb-1 w-full'>My Notes</h2>
-        <div className='flex items-center mt-6 mr-33'>
-          <input type="text" value={search} placeholder='Search notes...'
-            onChange={(e) => {
-              setPage(1);
-              setSearch(e.target.value)
-            }}
-            className="shadow-md px-3 py-1 outline-none rounded-2xl border border-blue-200 text-gray-600 text-md w-64 max-w-full"
-          />
-        </div>
-      </div>
-      <ul className='space-y-2 flex gap-6 flex-wrap mt-8 justify-center'>
+      {notes.length === 0 && (
+        <p className='text-gray-500 text-xl font-semibold mt-20  flex items-center'>No notes yet. Create one!</p>
+      )}
+
+      <ul className='space-y-2 flex gap-6 flex-wrap mt-14 justify-center'>
         {notes.map((note) => (
           <li key={note._id} className=' overflow-hidden relative flex justify-between  bg-amber-50 p-3 border border-amber-200 hover:border-blue-200 rounded-2xl hover:shadow-md w-74 h-50 transition-all duration-200 hover:scale-[0.98]'>
             
@@ -262,22 +265,25 @@ const Notes = () => {
         ))}
       </ul>
 
-      <div className='flex gap-4 mt-6 items-center'>
-        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}
-          className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer bg-white border border-blue-300'
-        >
-          Pre
-        </button>
+        {notes.length > 0 && (
+          <div className='flex gap-4 mt-6 items-center'>
+            <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}
+              className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer hover:bg-gray-100 bg-white border border-blue-300'
+            >
+              Pre
+            </button>
 
-        <span>Page {page} of {totalPages}</span>
+            <span>Page {page} of {totalPages}</span>
 
-        <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}
-          className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer bg-white border border-blue-300'
-        >
-          Next
-        </button>
+            <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}
+              className='px-3 py-1 rounded disabled:opacity-50 font-semibold hover:cursor-pointer hover:bg-gray-100 bg-white border border-blue-300'
+            >
+              Next
+            </button>
 
-      </div>
+          </div>
+
+        )}
     </div>
   )
 }
