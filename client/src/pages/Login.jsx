@@ -47,7 +47,7 @@ const Login = () => {
     }
   }
   return (
-    <div className='flex flex-col justify-center items-center w-full h-screen'>
+    <div className='relative flex flex-col justify-center items-center w-full h-screen'>
 
       {error && <p className='text-red-500 flex my-2'>{error}</p>}
 
@@ -59,20 +59,22 @@ const Login = () => {
             <input name='email' value={formData.email} onChange={handleChange} id='email' type='email' placeholder='Email' className='w-xs pl-12 py-2 text-black rounded-2xl border border-blue-300 outline-none' />
           </label>
         </div>
-        <div className='relative flex justify-center items-center'>
+        <div className=' flex flex-col justify-center items-center'>
           <label htmlFor="Password">
             <MdLockOutline className='text-black absolute ml-4 mt-3 text-lg' />
             <input name='password' value={formData.password} onChange={handleChange} id='Password' type="password" placeholder='Password' className='text-black outline-none border border-blue-300 w-xs pl-12 py-2 rounded-2xl' />
           </label>
-        </div>
-        <div className="text-center mt-4 space-y-2">
           <Link
             to="/forgetPassword"
-            className="text-sm text-blue-500 hover:underline block"
+            className=" w-full ml-26 mt-1 text-sm text-blue-500 hover:underline "
           >
             Forgot password?
           </Link>
-
+        </div>
+        <button disabled={isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs shadow-gray-500 '>
+          <span className='text-shadow-2xs font-bold text-white'>{isLoading ? "Logging in..." : "Login"}</span>
+        </button>
+        <div className="text-center mt-4 space-y-2">
           <p className="text-sm">
             Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-500 hover:underline">
@@ -80,9 +82,6 @@ const Login = () => {
             </Link>
           </p>
         </div>
-        <button disabled={isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs shadow-gray-500 '>
-          <span className='text-shadow-2xs font-bold text-white'>{isLoading ? "Logging in..." : "Login"}</span>
-        </button>
       </form>
     </div>
   )

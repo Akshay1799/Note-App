@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {api} from '../api/axios';
 
 const Signup = () => {
@@ -72,6 +72,14 @@ const Signup = () => {
         <button disabled={isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs shadow-gray-500 '>
           <span className='text-shadow-2xs font-bold text-white'>{isLoading?"Signing up..." : "Sign up"}</span>
         </button>
+        <div className="text-center mt-4">
+  <p className="text-sm">
+    Already have an account?{" "}
+    <Link to="/login" className="text-blue-500 hover:underline">
+      Login
+    </Link>
+  </p>
+</div>
       </form>
     </div>
   )
