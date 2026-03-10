@@ -1,125 +1,111 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { api } from '../api/axios'
 import { MdOutlineEmail, MdLockOutline } from "react-icons/md";
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
+  const [formData, setFormData] = useState({ email: '', password: '' })
   const [isLoading, setisLoading] = useState(false)
   const [error, setError] = useState("")
   const [errors, setErrors] = useState({});
-
   const { setUser } = useAuth();
-
   const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value } = e.target;
-
-    const updatedForm = {
-      ...formData,
-      [name]: value,
-    }
-    setFormData(updatedForm);
-
-    setErrors(validate(updatedForm));
+    const updated = { ...formData, [name]: value };
+    setFormData(updated);
+    setErrors(validate(updated));
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationError = validate(formData);
-    setErrors(validationError)
-
-    if (Object.keys(validationError).length > 0) {
-      return;
-    }
-
+    setErrors(validationError);
+    if (Object.keys(validationError).length > 0) return;
     try {
-      setisLoading(true);
-      setError("")
-
+      setisLoading(true); setError('');
       const res = await api.post("/api/auth/login", formData);
-      setUser(res.data.user)
-      navigate('/notes')
-
-    } catch (error) {
-      setError(error.response?.data?.message || 'Login failed please try again')
-    } finally {
-      setisLoading(false)
-    }
+      setUser(res.data.user);
+      navigate('/notes');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally { setisLoading(false); }
   }
 
-  const validate = (values) => {
-    const newErros = {};
-
-    if (!values.email) {
-      newErros.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      newErros.email = "Invalid email format"
-    }
-    if (!values.password) {
-      newErros.password = "Password is required"
-    } else if (values.password.length < 6) {
-      newErros.password = "Password must be at least 6 characters"
-    }
-
-    return newErros
+  const validate = (v) => {
+    const e = {};
+    if (!v.email) e.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(v.email)) e.email = "Invalid email format";
+    if (!v.password) e.password = "Password is required";
+    else if (v.password.length < 6) e.password = "Password must be at least 6 characters";
+    return e;
   }
 
-  const isFormValid =
-    formData.email &&
-    formData.password &&
-    Object.keys(validate(formData)).length === 0
-
+  const isFormValid = formData.email && formData.password && Object.keys(validate(formData)).length === 0;
 
   return (
-    <div className='relative flex flex-col justify-center items-center w-full h-screen'>
+    <div className="flex flex-col justify-center items-center w-full">
+      <form onSubmit={handleSubmit} className="auth-card">
 
-      {error && <p className='text-red-500 flex my-2'>{error}</p>}
+        {/* Header */}
+        <div className="flex flex-col items-center gap-1 mb-2">
+          <h2 className="font-bold text-2xl gradient-text">Welcome back</h2>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Sign in to your notes</p>
+        </div>
 
-      <form onSubmit={handleSubmit} className='bg-white shadow-xs  shadow-black flex flex-col justify-center mx-auto w-full max-w-md  px-5 py-4 gap-4 rounded-xl '>
-        <h2 className='flex justify-center font-bold text-2xl my-4 text-black '>Login</h2>
-        <div className='relative flex flex-col items-center'>
-          <label htmlFor="email" className='relative'>
-            <MdOutlineEmail className='text-black absolute ml-4 mt-3 text-lg' />
-            <input name='email' value={formData.email} onChange={handleChange} id='email' type='email' placeholder='Email' className='w-xs pl-12 py-2 text-black rounded-2xl border border-blue-300 outline-none' />
-          </label>
-          {errors.email && (
-            <p className="w-full ml-26 text-red-500 text-sm mt-1">{errors.email}</p>
-          )}
+        {/* Global error */}
+        {error && (
+          <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-400/30 rounded-xl px-4 py-2.5 text-red-600 dark:text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Email */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="email" className="text-xs font-medium text-gray-500 dark:text-slate-400">Email address</label>
+          <div className="relative">
+            <MdOutlineEmail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-lg pointer-events-none" />
+            <input name="email" value={formData.email} onChange={handleChange} id="email" type="email"
+              placeholder="you@example.com" className="form-input" />
+          </div>
+          {errors.email && <p className="text-red-500 dark:text-red-400 text-xs">{errors.email}</p>}
         </div>
-        <div className=' flex flex-col justify-center items-center'>
-          <label htmlFor="Password">
-            <MdLockOutline className='text-black absolute ml-4 mt-3 text-lg' />
-            <input name='password' value={formData.password} onChange={handleChange} id='Password' type="password" placeholder='Password' className='text-black outline-none border border-blue-300 w-xs pl-12 py-2 rounded-2xl' />
-          </label>
-          {errors.password && (
-            <p className="w-full ml-26 text-red-500 text-sm mt-1 mb-2">{errors.password}</p>
-          )}
-          <Link
-            to="/forgetPassword"
-            className=" w-full ml-26 mt-1 text-sm text-blue-500 hover:underline "
-          >
-            Forgot password?
-          </Link>
-        </div>
-        <button disabled={!isFormValid || isLoading} type='submit' className='mt-3 hover:ease-in hover:duration-100 hover:bg-blue-500 hover:cursor-pointer  px-4 py-2  rounded-2xl mx-auto 0 bg-blue-400 shadow-xs '>
-          <span className='text-shadow-2xs font-bold text-white'>{isLoading ? "Logging in..." : "Login"}</span>
-        </button>
-        <div className="text-center mt-4 space-y-2">
-          <p className="text-sm">
-            Don’t have an account?{" "}
-            <Link to="/signup" className="text-blue-500 hover:underline">
-              Sign up
+
+        {/* Password */}
+        <div className="flex flex-col gap-1">
+          <label htmlFor="Password" className="text-xs font-medium text-gray-500 dark:text-slate-400">Password</label>
+          <div className="relative">
+            <MdLockOutline className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500 text-lg pointer-events-none" />
+            <input name="password" value={formData.password} onChange={handleChange} id="Password" type="password"
+              placeholder="••••••••" className="form-input" />
+          </div>
+          {errors.password && <p className="text-red-500 dark:text-red-400 text-xs">{errors.password}</p>}
+          <div className="text-right mt-1">
+            <Link to="/forgetPassword" className="text-xs text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors">
+              Forgot password?
             </Link>
-          </p>
+          </div>
         </div>
+
+        {/* Submit */}
+        <button disabled={!isFormValid || isLoading} type="submit"
+          className="btn-primary w-full flex items-center justify-center gap-2 py-3 text-base mt-1">
+          {isLoading ? (
+            <>
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Signing in...
+            </>
+          ) : 'Sign in'}
+        </button>
+
+        <p className="text-center text-sm text-gray-500 dark:text-slate-400 mt-1">
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-indigo-500 dark:text-indigo-400 font-semibold hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+            Sign up
+          </Link>
+        </p>
       </form>
     </div>
   )

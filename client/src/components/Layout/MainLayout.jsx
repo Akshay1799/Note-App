@@ -4,12 +4,12 @@ import Navbar from '../Navbar'
 
 const MainLayout = () => {
   return (
-    <>
-      <Navbar/>
-      <main className='px-4'>
-        <Outlet/>
+    <div className="min-h-screen bg-violet-50 dark:bg-slate-950 transition-colors duration-300">
+      <Navbar />
+      <main>
+        <Outlet />
       </main>
-    </>
+    </div>
   )
 }
 
