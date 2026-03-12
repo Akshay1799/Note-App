@@ -16,7 +16,7 @@ const Navbar = () => {
   const isDark = theme === 'dark';
 
   return (
-    <nav className="flex justify-between items-center h-16 px-6 md:px-8
+    <nav className="flex justify-between items-center h-16 px-4 sm:px-6 md:px-8
                     bg-white/90 dark:bg-slate-950/85
                     backdrop-blur-xl
                     border-b border-violet-100 dark:border-white/8
@@ -31,7 +31,7 @@ const Navbar = () => {
                         shadow-lg shadow-indigo-400/30 shrink-0">
           <LuNotebookText />
         </div>
-        <h1 className="text-xl font-extrabold tracking-tight
+        <h1 className="text-base sm:text-xl font-extrabold tracking-tight
                        bg-linear-to-r from-fuchsia-600 to-rose-500
                        dark:from-fuchsia-400 dark:to-rose-400
                        bg-clip-text text-transparent">
@@ -40,7 +40,7 @@ const Navbar = () => {
       </div>
 
       
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2">
 
         {/* Theme toggle */}
         <button
@@ -69,7 +69,7 @@ const Navbar = () => {
                      active:translate-y-0
                      transition-all duration-200 cursor-pointer"
         >
-          <span>⎋</span> Logout
+          <span>⎋</span><span className="hidden sm:inline"> Logout</span>
         </button>
       </div>
     </nav>

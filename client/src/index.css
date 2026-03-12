@@ -112,7 +112,7 @@ input:-webkit-autofill:active {
            dark:backdrop-blur-2xl
            border border-violet-100 dark:border-white/10
            shadow-2xl shadow-indigo-100/60 dark:shadow-black/50
-           rounded-2xl px-8 py-10 flex flex-col gap-5;
+           rounded-2xl px-5 sm:px-8 py-8 sm:py-10 flex flex-col gap-5;
   }
 
   /* Gradient heading text */

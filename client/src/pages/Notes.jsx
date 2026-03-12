@@ -137,8 +137,8 @@ const Notes = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 pb-16 flex flex-col items-center
-                    min-h-[calc(100vh-64px)] bg-violet-50 dark:bg-slate-950 
+    <div className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 pb-16 flex flex-col items-center
+                    min-h-[calc(100vh-64px)] bg-violet-50 dark:bg-slate-950
                     transition-colors duration-300">
 
       {/* Error */}
@@ -152,7 +152,7 @@ const Notes = () => {
       )}
 
       {/* New Note */}
-      <div className="w-full max-w-4xl flex justify-start mb-5">
+      <div className="w-full flex justify-start mb-5">
         {isFormOpen ? (
           <button onClick={() => setIsFormOpen(false)} className="btn-ghost px-4 py-2">
             <MdOutlineCancel size={18} /> Cancel
@@ -208,7 +208,7 @@ const Notes = () => {
 
       {/* Header and Search */}
       {notes.length > 0 && (
-        <div className="w-full max-w-4xl flex justify-between items-center my-6 flex-wrap gap-3">
+        <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center my-5 gap-3">
           <h2 className="text-3xl font-extrabold tracking-tight
                          text-indigo-900 dark:text-slate-100
                          transition-colors duration-300">
@@ -221,7 +221,7 @@ const Notes = () => {
               onChange={e => { setPage(1); setSearch(e.target.value); }}
               className="bg-white dark:bg-white/[0.07]
                          border border-violet-200 dark:border-white/10 rounded-xl
-                         pl-9 pr-4 py-2.5 text-sm w-56
+                         pl-9 pr-4 py-2.5 text-sm w-full sm:w-56
                          text-indigo-950 dark:text-slate-100
                          placeholder:text-gray-400 dark:placeholder:text-slate-500
                          outline-none focus:border-indigo-400 dark:focus:border-indigo-500
@@ -242,11 +242,11 @@ const Notes = () => {
       )}
 
       {/* Note Cards */}
-      <ul className="flex flex-wrap gap-5 justify-center w-full p-0 list-none">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full p-0 list-none">
         {notes.map((note, index) => (
           <li
             key={note._id}
-            className={`note-card w-72 min-h-50 animate-card-in
+            className={`note-card w-full min-h-[190px] animate-card-in
                         ${editingNoteId === note._id ? '' : 'note-card-hoverable cursor-default'}`}
           >
             {/* top border */}
