@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 
 
-export const createNote = asyncHandler(async (req, res) => {
+export const createNote = asyncHandler(async (req, res, next) => {
   
     const { title, content } = req.body;
 

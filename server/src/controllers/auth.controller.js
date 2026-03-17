@@ -4,7 +4,7 @@ import { config } from "../config/index.js";
 import { AppError } from "../utils/AppError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateToken } from "../utils/generateToken.js";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 export const signup = asyncHandler(async(req, res, next)=>{
 
@@ -40,10 +40,12 @@ export const login = asyncHandler(async(req, res, next)=>{
 
         const token = generateToken(user._id);
 
+        const isProd = config.env === "production"
+
         res.cookie('token', token, {
             httpOnly:true,
-            secure:config.env === "production",
-            sameSite:"none",
+            secure:isProd,
+            sameSite:isProd ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -98,7 +100,6 @@ export const forgotPassword = asyncHandler(async(req, res, next)=>{
 export const resetPassword = asyncHandler(async(req, res, next)=>{
     const {password} = req.body;
     const {token} = req.params;
-
 
     if(!token) return next(new AppError('Token is required', 400));
     if(!password) return next(new AppError('Password is required', 400));
