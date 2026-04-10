@@ -27,6 +27,7 @@ const Login = () => {
     try {
       setisLoading(true); setError('');
       const res = await api.post("/api/auth/login", formData);
+      localStorage.setItem('token', res.data.token);
       setUser(res.data.user);
       navigate('/notes');
     } catch (err) {
